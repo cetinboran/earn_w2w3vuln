@@ -1,0 +1,41 @@
+services:
+  api:
+    container_name: api
+    build:
+      context: ../backend/.
+      dockerfile: ../deployment/web3/dev.Dockerfile
+    ports:
+      - 8082:8082
+    volumes:
+      - ../backend:/app
+      - ../Wallet:/Wallet
+    networks:
+      - idor
+
+  frontend:
+    container_name: idor-frontend
+    build:
+      context: ../frontend/.
+      dockerfile: ../deployment/frontend/dev.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ../frontend:/app
+    networks:
+      - idor
+
+  nginx:
+    image: nginx:latest
+    container_name: idor-nginx
+    restart: always
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - idor
+
+networks:
+  idor:
+    driver: bridge
