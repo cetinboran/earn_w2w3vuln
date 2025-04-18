@@ -111,7 +111,7 @@ const Dashboard = ({ user }) => {
                                     </div>
                                     <button
                                         onClick={() => handleMint(nft.id)}
-                                        disabled={minted.includes(nft.id)}
+                                        disabled={nft.isMinted}
                                         style={{ marginLeft: '20px', padding: '6px 12px' }}
                                     >
                                         {minted.includes(nft.id) ? "Mintlendi" : "Mint Et"}
