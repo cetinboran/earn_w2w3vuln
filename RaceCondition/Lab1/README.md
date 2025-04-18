@@ -54,7 +54,7 @@ This demonstrates the risk of race conditions if they are not properly mitigated
 
    ```bash
    git clone https://github.com/cetinboran/earn_w2w3vuln.git
-   cd Lab3
+   cd RaceCondition/Lab1
    ```
 
 2. Install dependencies:
