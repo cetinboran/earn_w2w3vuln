@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// Dummy kullanıcılar
 const dummyUsers = [
     { id: 1, username: "solninja", password: "pass1", publicKey: "5khiXTUqxMb4hfF1gwVTzSZejnWyfjf32Evai9GBvYUX" },
     { id: 2, username: "solwave", password: "pass2", publicKey: "74HhKaQZp94oEbWgU51qJsSDTLRahVJFaJLqJN5jfs4U" },
@@ -21,7 +20,7 @@ const Login = ({ onLogin }) => {
             localStorage.setItem('user', JSON.stringify(foundUser));
             onLogin(foundUser);
         } else {
-            alert("Kullanıcı adı veya şifre hatalı.");
+            alert("The username or password is incorrect.");
         }
     };
 
@@ -31,13 +30,13 @@ const Login = ({ onLogin }) => {
             <input
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                placeholder="Kullanıcı Adı"
+                placeholder="Username"
             />
             <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="Şifre"
+                placeholder="Password"
             />
             <button onClick={handleLogin}>Giriş</button>
         </div>

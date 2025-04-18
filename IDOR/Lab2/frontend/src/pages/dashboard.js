@@ -13,14 +13,14 @@ const Dashboard = ({ user }) => {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Backend hata: ${response.status} ${response.statusText}`);
+                    throw new Error(`Backend Error: ${response.status} ${response.statusText}`);
                 }
 
                 const data = await response.json();
 
                 setNfts(data.data);
             } catch (error) {
-                console.log("Fetch sırasında hata oluştu:", error);
+                console.log("Error occurred during fetch:", error);
             } finally {
                 setLoading(false);
             }
@@ -31,7 +31,7 @@ const Dashboard = ({ user }) => {
 
     const handleMint = async (nftId) => {
         if (!user || !user.publicKey) {
-            alert("Kullanıcı bilgisi eksik.");
+            alert("User information is missing.");
             return;
         }
 
@@ -51,21 +51,21 @@ const Dashboard = ({ user }) => {
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.message || "Mint işlemi başarısız.");
+                throw new Error(result.message || "Mint operation failed.");
             }
 
             setMinted([...minted, nftId]);
-            alert(`NFT ${nftId} başarıyla mintlendi!`);
+            alert(`NFT ${nftId} successfully minted!`);
         } catch (error) {
-            alert("Mint sırasında bir hata oluştu.");
+            alert("An error occurred during Mint.");
         }
     };
 
 
     return (
         <div style={{ padding: "20px", fontFamily: "Arial" }}>
-            <h2>Hoş geldin, {user.username}!</h2>
-            <p>Kullanıcı ID: {user.id}</p>
+            <h2>Welcome, {user.username}!</h2>
+            <p>User ID: {user.id}</p>
 
             <button
                 onClick={() => {
@@ -74,13 +74,13 @@ const Dashboard = ({ user }) => {
                 }}
                 style={{ margin: "20px 0" }}
             >
-                Çıkış Yap
+                Logout
             </button>
 
-            <h3>Mint Edilebilir NFT'ler</h3>
+            <h3>Can be Minted</h3>
 
             {loading ? (
-                <p>Yükleniyor...</p>
+                <p>Loading...</p>
             ) : (
                 <>
                     {nfts.length > 0 ? (
@@ -110,13 +110,13 @@ const Dashboard = ({ user }) => {
                                         disabled={nft.isMinted}
                                         style={{ marginLeft: '20px', padding: '6px 12px' }}
                                     >
-                                        {minted.includes(nft.id) ? "Mintlendi" : "Mint Et"}
+                                        {minted.includes(nft.id) ? "Minted" : "Mint NFT"}
                                     </button>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p>Hiç NFT bulunamadı.</p>
+                        <p>NFT Not Found.</p>
                     )}
                 </>
             )}

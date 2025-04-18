@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,7 +16,7 @@ type NFT struct {
 	Title     string `json:"title"`
 }
 
-var nfts = []NFT{
+var usersNfts = []NFT{
 	{1, 1, "cetinboran", "Python Master"},
 	{2, 1, "cetinboran", "C++ Master"},
 	{3, 2, "kaanmesum", "C# Master"},
@@ -49,7 +47,7 @@ func main() {
 			return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 		}
 
-		for _, nft := range nfts {
+		for _, nft := range usersNfts {
 			if nft.OwnerID == body.UserID {
 				if nft.ID == body.NFTID {
 					return c.JSON(nft)
@@ -69,7 +67,6 @@ func main() {
 
 		var body RequestBody
 		if err := c.BodyParser(&body); err != nil {
-			fmt.Println(err)
 			return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 		}
 
@@ -77,7 +74,7 @@ func main() {
 			return c.Status(fiber.StatusBadRequest).SendString("There is no such user")
 		}
 
-		for _, nft := range nfts {
+		for _, nft := range usersNfts {
 			if nft.OwnerID == body.UserID {
 				if nft.ID == body.NFTID {
 					if nft.OwnerID != currentUser.ID {
