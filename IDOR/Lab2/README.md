@@ -38,7 +38,7 @@ The project is organized into the following main directories:
 
 ## 🚀 Getting Started
 
-You can launch the project using Docker Compose or the Makefile. Ensure you have **Docker** and **Make** installed.
+You can launch the project using Docker Compose or the Makefile. Ensure you have **Docker**, **Make**, and **npm** installed.
 
 ### 🔧 Option 1: Docker Compose
 
@@ -61,6 +61,28 @@ make dev
 ```
 
 This wraps the same Docker process under the hood and sets up the environment.
+
+---
+
+### 🔨 Install Frontend Dependencies
+
+If you prefer running the frontend locally (React app), navigate to the `frontend/` directory and run the following command to install required dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+### 🔨 Install Backend Dependencies
+
+If you prefer running the backend locally (Express API), navigate to the `backend/` directory and run the following command to install required dependencies:
+
+```bash
+cd backend
+npm install
+```
 
 ---
 
@@ -175,4 +197,7 @@ By showcasing this vulnerability in a **hands-on Web3 scenario**, this lab bridg
 - Solana Devnet Docs - https://docs.solana.com/clusters#devnet
 - Solana General Docs - https://solana.com/tr/docs
 - Solana CLI Tool Docs - https://solana.com/tr/docs/intro/installation
-- NFT minting example based on: https://github.com/metaplex-foundation/js-examples
+- NFT minting example based on - https://github.com/metaplex-foundation/js-examples
+- OWASP Top 10 - https://owasp.org/www-project-top-ten/
+
+

@@ -76,9 +76,7 @@ Before starting the lab, ensure you have the following:
 - **Web2 HTTP Server Vulnerability:**
   - The vulnerability arises from improper handling of incoming HTTP requests, allowing an attacker to interact with a Web3 gRPC service that should not be exposed to the Web2 environment.
 - **gRPC Server:**
-
   - The gRPC server is designed to handle Web3-specific requests. It exposes sensitive data that is intended to be protected from unauthorized access. The vulnerability in the Web2 server allows this data to be fetched.
-
 - **Exploiting Server Misconfigurations:**
   - The lab demonstrates how simple misconfigurations and lack of proper authentication/authorization checks in the Web2 HTTP server can lead to exposing critical Web3 data.
 
@@ -111,6 +109,7 @@ To mitigate this issue, several steps can be taken:
 
 - [gRPC Documentation](https://grpc.io/docs/)
 - [Go Documentation](https://golang.org/doc/)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 
 ### Conclusion
 
