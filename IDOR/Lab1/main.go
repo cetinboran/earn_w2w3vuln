@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,8 +20,8 @@ type NFT struct {
 
 var nfts = []NFT{
 	{1, 1, "cetinboran", "Python Master"},
-	{2, 1, "mehmetozler", "C++ Master"},
-	{3, 2, "arzutoktas", "C# Master"},
+	{2, 1, "cetinboran", "C++ Master"},
+	{3, 2, "kaanmesum", "C# Master"},
 }
 
 func createUsers() []User {
@@ -48,8 +50,10 @@ func main() {
 		}
 
 		for _, nft := range nfts {
-			if nft.ID == body.NFTID {
-				return c.JSON(nft)
+			if nft.OwnerID == body.UserID {
+				if nft.ID == body.NFTID {
+					return c.JSON(nft)
+				}
 			}
 		}
 
@@ -65,16 +69,22 @@ func main() {
 
 		var body RequestBody
 		if err := c.BodyParser(&body); err != nil {
+			fmt.Println(err)
 			return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 		}
 
-		if currentUser.ID != body.UserID {
-			return c.Status(fiber.StatusInternalServerError).SendString("IDOR Detected")
+		if body.UserID != 1 && body.UserID != 2 {
+			return c.Status(fiber.StatusBadRequest).SendString("There is no such user")
 		}
 
 		for _, nft := range nfts {
-			if nft.ID == body.NFTID {
-				return c.JSON(nft)
+			if nft.OwnerID == body.UserID {
+				if nft.ID == body.NFTID {
+					if nft.OwnerID != currentUser.ID {
+						return c.Status(fiber.StatusInternalServerError).SendString("IDOR Detected")
+					}
+					return c.JSON(nft)
+				}
 			}
 		}
 

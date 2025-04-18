@@ -76,9 +76,7 @@ Even though NFT with ID 2 belongs to `userID: 2`, this request from `userID: 1` 
 ### 🟢 Secure Endpoint Example
 
 ```bash
-curl -X POST http://localhost:3000/nfts/safe/get \
-  -H "Content-Type: application/json" \
-  -d '{"nftid":1,"userID":1}'
+curl -X POST http://localhost:3000/nfts/safe/get -H "Content-Type: application/json" -d "{\"nftid\":1,\"userID\":1}"
 ```
 
 This request will succeed because `userID: 1` owns NFT 1.
@@ -86,9 +84,7 @@ This request will succeed because `userID: 1` owns NFT 1.
 Trying to access an NFT not owned by the current user:
 
 ```bash
-curl -X POST http://localhost:3000/nfts/safe/get \
-  -H "Content-Type: application/json" \
-  -d '{"nftid":2,"userID":1}'
+curl -X POST http://localhost:3000/nfts/vuln/get -H "Content-Type: application/json" -d "{\"nftid\":1,\"userID\":1}"
 ```
 
 Will return:
