@@ -2,136 +2,145 @@
 
 ## **Description**
 
-This lab demonstrates an **Insecure Direct Object Reference (IDOR)** vulnerability within the context of Web3 applications. The vulnerability allows attackers to manipulate object IDs, such as NFT IDs, to gain unauthorized access to sensitive resources. In decentralized platforms like Web3, this vulnerability can lead to severe consequences, including theft or unauthorized modification of blockchain-based assets such as NFTs.
+This lab demonstrates an **Insecure Direct Object Reference (IDOR)** vulnerability in a simulated Web3 environment. The system mimics an educational platform where users earn NFTs for completing courses.
 
-IDOR typically occurs when a server lacks proper access control mechanisms, allowing users to access or modify resources they should not be able to. In Web3 applications, where ownership and control over digital assets (like NFTs) are fundamental, IDOR vulnerabilities are especially critical as they can directly affect the security and integrity of the blockchain environment.
+A vulnerable API endpoint allows users to fetch NFT data by specifying the NFT ID and their user ID—without validating ownership. This creates a scenario where attackers can access NFTs they do not own.
 
-### **Example Scenario: NFT Reward System**
+---
 
-Consider an educational platform where users earn NFTs as rewards for completing courses. Each course is linked to a unique NFT, and users can access their NFTs via a dedicated endpoint.
+## **Example Scenario: NFT Reward System**
 
-However, if access controls are not properly enforced, an attacker could manipulate the object ID (in this case, the NFT ID) in the request URL to access NFTs belonging to other users. This would allow the attacker to claim rewards that they have not earned.
+In this example:
 
-### **IDOR in Web3**
+- Users are rewarded with NFTs for completing courses.
+- NFTs are stored with information about the `OwnerID` and `OwnerName`.
+- Users can retrieve their NFTs via API.
 
-While IDOR vulnerabilities are often seen in traditional Web2 applications, they can be even more dangerous in Web3 systems. This is because Web3 applications often involve blockchain-based assets, which are directly tied to a user’s identity, typically represented by a wallet address. Exploiting an IDOR vulnerability in this context could lead to unauthorized access to NFTs or other valuable assets.
+> If access controls are missing or improperly enforced, a malicious user can simply change the `nftid` in a request and retrieve NFTs belonging to other users—this is an IDOR vulnerability.
 
-By exploiting such a vulnerability, an attacker can potentially:
+---
 
-- View or retrieve NFTs that belong to other users
-- Modify the ownership of NFTs
-- Claim NFTs that they haven’t earned (e.g., claiming rewards for courses they haven’t completed)
+## **Endpoints Overview**
 
-This presents a severe security risk that can undermine the trust and integrity of a Web3 platform.
+There are two endpoints provided:
+
+### 🔴 `/nfts/vuln/get` (Vulnerable)
+
+This endpoint does **not** check if the user requesting the NFT is its rightful owner. It simply returns the NFT object based on the given ID.
+
+### 🟢 `/nfts/safe/get` (Secure)
+
+This endpoint **verifies** that the user making the request matches the `OwnerID` of the NFT.
+
+---
 
 ## **Setup Instructions**
 
-Follow these steps to run the vulnerable server and demonstrate the IDOR vulnerability in a Web3 environment.
-
-### **1. Clone the Repository**
-
-Start by cloning the repository to your local machine:
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/cetinboran/earn_w2w3vuln.git
 cd earn_w2w3vuln/Lab1
 ```
 
-### **2. Install Dependencies**
-
-Make sure to install all the necessary dependencies:
+### 2. Install Go Modules
 
 ```bash
 go mod tidy
 ```
 
-### **3. Run the Vulnerable Server**
-
-Now, start the server that simulates the IDOR vulnerability:
+### 3. Run the Server
 
 ```bash
 go run main.go
 ```
 
-This will start the server locally on `localhost:3000`.
+Server starts at: `http://localhost:3000`
 
-### **4. Exploit the IDOR Vulnerability**
+---
 
-The vulnerability can be exploited by manipulating the `id` parameter in the URL when making a request to the `/nfts/:id` endpoint.
+## **Using the API**
 
-#### **Example Exploit:**
-
-If a legitimate user wants to view their NFT, the request would look like this:
+### 🔴 Vulnerable Endpoint Exploit Example
 
 ```bash
-curl -X GET http://localhost:3000/nfts/1
+curl -X POST http://localhost:3000/nfts/vuln/get \
+  -H "Content-Type: application/json" \
+  -d '{"nftid":2,"userID":1}'
 ```
 
-This fetches the NFT associated with ID `1`.
+Even though NFT with ID 2 belongs to `userID: 2`, this request from `userID: 1` will still return the data — demonstrating the IDOR vulnerability.
 
-However, if an attacker modifies the `id` parameter to view someone else’s NFT, they can send a request like:
+---
+
+### 🟢 Secure Endpoint Example
 
 ```bash
-curl -X GET http://localhost:3000/nfts/2
+curl -X POST http://localhost:3000/nfts/safe/get \
+  -H "Content-Type: application/json" \
+  -d '{"nftid":1,"userID":1}'
 ```
 
-If the server fails to check whether the user is authorized to access this NFT, it will return the NFT data for `id 2`, which belongs to another user.
+This request will succeed because `userID: 1` owns NFT 1.
 
-This is a classic **IDOR** vulnerability, where an attacker can gain access to resources that they shouldn't have access to simply by manipulating the object ID.
+Trying to access an NFT not owned by the current user:
 
-## **Exploiting IDOR in Web3**
+```bash
+curl -X POST http://localhost:3000/nfts/safe/get \
+  -H "Content-Type: application/json" \
+  -d '{"nftid":2,"userID":1}'
+```
 
-In Web3, digital assets like NFTs are linked to user wallets, which provide a decentralized and tamper-proof means of ownership. Exploiting an IDOR vulnerability in a Web3 system can have serious consequences, such as:
+Will return:
 
-- Unauthorized access to NFTs or other digital assets
-- Modifying the ownership of NFTs
-- Claiming rewards (e.g., NFTs for courses not completed)
+```json
+IDOR Detected
+```
 
-Since Web3 applications rely on the integrity of blockchain assets, the exploitation of an IDOR vulnerability could result in significant financial or reputational loss for users and platforms.
+---
 
 ## **Mitigation Strategies**
 
-To prevent such vulnerabilities, robust access control mechanisms should be put in place. Here are some strategies to mitigate the risk of IDOR in Web3 applications:
+### ✅ Authorization Checks
 
-### **1. Authorization Checks**
+Always validate whether the authenticated user is allowed to access the resource.
 
-Always ensure that the user making the request is authorized to access the requested object. For example, before allowing access to an NFT, verify that the user’s wallet address matches the one associated with the NFT ID.
+### ✅ Identity Verification
 
-### **2. User Identity Verification**
+Use wallet addresses, JWT tokens, or signatures to reliably identify users in Web3 apps.
 
-In Web3 applications, the user’s identity is typically tied to their wallet address. Ensure proper verification of the user’s identity before processing requests. This can be done through wallet signatures, JWT tokens, or other secure methods.
+### ✅ Access Control Lists (ACLs)
 
-### **3. Implement Access Control Lists (ACLs)**
+Map users to resources securely and enforce strict access policies.
 
-Use ACLs to enforce access control rules based on user roles and ensure that only authorized users can view or modify their NFTs.
+---
 
-By implementing these security measures, you can greatly reduce the risk of exploitation of IDOR vulnerabilities in Web3 applications.
+## **Code Overview**
 
-## **Steps to Reproduce the Vulnerability**
+The application uses:
 
-1. Start the vulnerable server by running:
+- 🌀 [Fiber](https://gofiber.io) — Web framework for Go
+- 🎓 NFT-like objects to simulate course rewards
+- 🔐 Simulated identity through a hardcoded `currentUser`
 
-   ```bash
-   go run main.go
-   ```
-
-2. Attempt to access another user’s NFT by sending a request like:
-
-   ```bash
-   curl -X GET http://localhost:3000/nfts/2
-   ```
-
-   If the server does not perform proper access checks, you will see the details of the NFT that belongs to `user2`, even though you are not authorized to access it.
+---
 
 ## **Conclusion**
 
-This lab highlights the importance of proper access control in Web3 applications. IDOR vulnerabilities in such platforms can lead to unauthorized access to NFTs and other digital assets, undermining the integrity of the system. Developers must be vigilant in implementing security measures to ensure that Web3 platforms are secure and trustworthy for users.
+IDOR vulnerabilities can have **severe consequences in Web3** environments, including unauthorized NFT access and loss of digital assets. Proper access control is essential to protect decentralized applications and their users.
+
+---
 
 ## **References**
 
-- [Solana Devnet Docs](https://docs.solana.com/clusters#devnet)
-- [Solana General Docs](https://solana.com/tr/docs)
-- [Solana CLI Tool Docs](https://solana.com/tr/docs/intro/installation)
-- [NFT Minting Example on GitHub](https://github.com/metaplex-foundation/js-examples)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [Solana Devnet Docs](https://docs.solana.com/clusters#devnet)
+- [NFT Minting Example on GitHub](https://github.com/metaplex-foundation/js-examples)
 
+```
+
+```
+
+```
+
+```
