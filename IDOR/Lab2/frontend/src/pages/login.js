@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // Dummy kullanıcılar
 const dummyUsers = [
     { id: 1, username: "solninja", password: "pass1", publicKey: "5khiXTUqxMb4hfF1gwVTzSZejnWyfjf32Evai9GBvYUX" },
-    { id: 2, username: "solwave", password: "pass2", publicKey: "11111111111111" },
+    { id: 2, username: "solwave", password: "pass2", publicKey: "74HhKaQZp94oEbWgU51qJsSDTLRahVJFaJLqJN5jfs4U" },
     { id: 3, username: "solbird", password: "pass3", publicKey: "22222222222222" },
     { id: 4, username: "solcore", password: "pass4", publicKey: "33333333333333" },
 ];

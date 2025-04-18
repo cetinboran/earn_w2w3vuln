@@ -48,10 +48,7 @@ const Dashboard = ({ user }) => {
                 }),
             });
 
-            console.log(user.id, nftId, user.publicKey)
-
             const result = await response.json();
-            console.log(result, "Result")
 
             if (!response.ok) {
                 throw new Error(result.message || "Mint işlemi başarısız.");
@@ -60,7 +57,6 @@ const Dashboard = ({ user }) => {
             setMinted([...minted, nftId]);
             alert(`NFT ${nftId} başarıyla mintlendi!`);
         } catch (error) {
-            console.log("Mint işlemi sırasında hata:", error);
             alert("Mint sırasında bir hata oluştu.");
         }
     };

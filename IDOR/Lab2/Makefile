@@ -1,7 +1,7 @@
 # Makefile for IDOR in NFT Minting Lab
 
 # Docker Compose file path
-COMPOSE_FILE=./deployment/dev.docker-compose.yml
+COMPOSE_FILE=./deployment/dev.docker-compose.yaml
 
 # Default target
 .PHONY: help
