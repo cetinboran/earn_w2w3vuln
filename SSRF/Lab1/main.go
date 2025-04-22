@@ -12,6 +12,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Developed by Çetin Boran Mesüm
+
 type server struct {
 	secretpb.UnimplementedSecretServiceServer
 }
