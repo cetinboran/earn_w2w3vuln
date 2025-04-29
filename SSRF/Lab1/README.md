@@ -11,6 +11,8 @@ In this lab, you will be interacting with two components:
 
 The goal of the lab is to exploit the vulnerability in the Web2 HTTP server to retrieve secret data from the Web3 gRPC server, showcasing how improper handling of requests and vulnerable server-side components can lead to unintended access to sensitive Web3 information.
 
+For a detailed demonstration of this lab, check out the [Lab Demonstration Video Playlist](https://www.youtube.com/watch?v=37Lmy72kRZE&list=PLVW6r8PSLZe7MU2yoHFxRZVtPHn2xxmfX&index=2).
+
 ### Lab Objectives
 
 - Understand the Web2-to-Web3 communication model and the security risks involved.

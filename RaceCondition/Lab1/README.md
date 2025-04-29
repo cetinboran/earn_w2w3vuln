@@ -9,6 +9,8 @@ This project demonstrates how **race condition vulnerabilities** in Web2 applica
 
 The focus of this demo is not on the tokens themselves but on how Web2 vulnerabilities like race conditions can be exploited in Web3 contexts.
 
+For a detailed demonstration of this lab, check out the [Lab Demonstration Video Playlist](https://www.youtube.com/watch?v=hAcSu7oFjr8&list=PLVW6r8PSLZe7MU2yoHFxRZVtPHn2xxmfX&index=1).
+
 ## Technology Stack
 
 - **Go (Golang)**: The backend is built with Go, a powerful language known for its concurrency management, making it suitable for handling race conditions.
