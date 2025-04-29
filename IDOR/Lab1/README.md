@@ -36,26 +36,119 @@ This endpoint **verifies** that the user making the request matches the `OwnerID
 
 ## **Setup Instructions**
 
-### 1. Clone the Repository
+### **Step 1: Clone the Repository**
+
+Start by cloning the repository to your local machine:
 
 ```bash
 git clone https://github.com/cetinboran/earn_w2w3vuln.git
 cd earn_w2w3vuln/Lab1
 ```
 
-### 2. Install Go Modules
+This will download all necessary files for the lab.
+
+---
+
+### **Step 2: Install Go Modules**
+
+Make sure all Go dependencies are installed by running:
 
 ```bash
 go mod tidy
 ```
 
-### 3. Run the Server
+This will fetch and install the required Go packages listed in `go.mod`.
+
+---
+
+### **Step 3: Run the Application Locally**
+
+You can run the lab locally by executing:
 
 ```bash
 go run main.go
 ```
 
-Server starts at: `http://localhost:3000`
+The server will start running on `http://localhost:3000`.
+
+> **Note**: If you face any issues while running locally, ensure Go is installed correctly and the necessary dependencies are in place.
+
+---
+
+### **Step 4: Running the Application in Docker (Optional)**
+
+If you prefer to run the application in a Docker container, follow these steps:
+
+1. **Create a Dockerfile**
+
+   If not already present, create a `Dockerfile` for the application:
+
+   ```Dockerfile
+   FROM golang:1.18-alpine AS builder
+   WORKDIR /app
+   COPY . .
+   RUN go mod tidy
+   RUN go build -o app .
+
+   FROM alpine:latest
+   WORKDIR /root/
+   COPY --from=builder /app/app .
+   EXPOSE 3000
+   CMD ["./app"]
+   ```
+
+2. **Build the Docker Image**
+
+   In the project directory, build the Docker image using:
+
+   ```bash
+   docker build -t web3-vuln-lab .
+   ```
+
+3. **Run the Docker Container**
+
+   Once the image is built, run the container:
+
+   ```bash
+   docker run -p 3000:3000 web3-vuln-lab
+   ```
+
+   This will start the server inside the Docker container and bind it to `http://localhost:3000`.
+
+---
+
+### **Step 5: Access the Application**
+
+Once the server is running, you can access the lab's endpoints via `http://localhost:3000`. Use the following tools to interact with the API:
+
+- **curl**: Use `curl` commands to interact with the vulnerable and secure endpoints.
+- **Postman**: Alternatively, you can use tools like Postman to test the API by sending requests to the endpoints.
+
+---
+
+### **Step 6: Verify Deployment**
+
+To ensure the application is deployed correctly, test both vulnerable and secure endpoints:
+
+1. **Vulnerable Endpoint**:
+
+   ```bash
+   curl -X POST http://localhost:3000/nfts/vuln/get \
+     -H "Content-Type: application/json" \
+     -d '{"nftid":2,"userID":1}'
+   ```
+
+   This should return NFT data for `nftid:2` even though it belongs to a different user.
+
+2. **Secure Endpoint**:
+
+   ```bash
+   curl -X POST http://localhost:3000/nfts/safe/get \
+     -H "Content-Type: application/json" \
+     -d '{"nftid":1,"userID":1}'
+   ```
+
+   This request should only succeed if `userID: 1` owns NFT `1`.
 
 ---
 
@@ -64,9 +157,7 @@ Server starts at: `http://localhost:3000`
 ### 🔴 Vulnerable Endpoint Exploit Example
 
 ```bash
-curl -X POST http://localhost:3000/nfts/vuln/get \
-  -H "Content-Type: application/json" \
-  -d '{"nftid":2,"userID":1}'
+curl -X POST http://localhost:3000/nfts/vuln/get -H "Content-Type: application/json" -d "{\"nftid\":3,\"userID\":2}"
 ```
 
 Even though NFT with ID 2 belongs to `userID: 2`, this request from `userID: 1` will still return the data — demonstrating the IDOR vulnerability.
@@ -84,7 +175,7 @@ This request will succeed because `userID: 1` owns NFT 1.
 Trying to access an NFT not owned by the current user:
 
 ```bash
-curl -X POST http://localhost:3000/nfts/vuln/get -H "Content-Type: application/json" -d "{\"nftid\":1,\"userID\":1}"
+curl -X POST http://localhost:3000/nfts/safe/get -H "Content-Type: application/json" -d "{\"nftid\":3,\"userID\":2}"
 ```
 
 Will return:
@@ -115,9 +206,23 @@ Map users to resources securely and enforce strict access policies.
 
 The application uses:
 
-- 🌀 [Fiber](https://gofiber.io) — Web framework for Go
-- 🎓 NFT-like objects to simulate course rewards
-- 🔐 Simulated identity through a hardcoded `currentUser`
+- 🌀 [Fiber](https://gofiber.io) — A fast, lightweight web framework for Go, ideal for building performant REST APIs.
+- 🎓 NFT-like objects — Simulate course rewards as NFTs, each containing an `nftid`, `OwnerID`, `OwnerName`, and other metadata like `CourseName`.
+- 🔐 Simulated identity — For simplicity, user authentication is simulated by a hardcoded user identity (`currentUser`) with the following details:
+
+  ```go
+  currentUser := User{
+    UserID:   1,
+    UserName: "cetinboran",
+  }
+  ```
+
+  In this case:
+
+  - **UserID** is set to `1`, representing the user.
+  - **UserName** is set to `"cetinboran"`, a simulated username.
+
+  The `currentUser` is used to simulate a logged-in user when performing requests to the secure endpoint (`/nfts/safe/get`). In a real-world Web3 application, the identity could be verified via wallet addresses, JWT tokens, or other mechanisms.
 
 ---
 
@@ -132,11 +237,3 @@ IDOR vulnerabilities can have **severe consequences in Web3** environments, incl
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [Solana Devnet Docs](https://docs.solana.com/clusters#devnet)
 - [NFT Minting Example on GitHub](https://github.com/metaplex-foundation/js-examples)
-
-```
-
-```
-
-```
-
-```
