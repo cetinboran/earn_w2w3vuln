@@ -8,6 +8,8 @@ Here, you are presented with an NFT minting interface, resembling a "rewards scr
 
 > ✅ While the application simulates a simple NFT minting dApp, the vulnerability is real and exploitable — making it a valuable learning scenario for developers, pentesters, and blockchain security enthusiasts.
 
+For a detailed demonstration of this lab, check out the [Lab Demonstration Video Playlist](https://www.youtube.com/watch?v=LTid0wD2iHA&list=PLVW6r8PSLZe7MU2yoHFxRZVtPHn2xxmfX&index=3&t=23s).
+
 ---
 
 ## ⚒️ Technical Summary
@@ -142,13 +144,7 @@ Now, **you will receive an NFT that doesn’t belong to you.**
 ### 🧰 Exploitation with cURL
 
 ```bash
-curl -X POST http://localhost/api/nft/mint/demo \
-  -H "Content-Type: application/json" \
-  -d '{
-    "userID": 2,
-    "nftID": 2,
-    "publicKey": "Your_Own_Solana_Public_Key"
-  }'
+curl -X POST http://localhost/api/nft/mint/demo -H "Content-Type: application/json" -d '{"userID": 2, "nftID": 2, "publicKey": "Your_Own_Solana_Public_Key"}'
 ```
 
 This will mint the NFT owned by `userID: 2` to **your** wallet address.
@@ -199,5 +195,3 @@ By showcasing this vulnerability in a **hands-on Web3 scenario**, this lab bridg
 - Solana CLI Tool Docs - https://solana.com/tr/docs/intro/installation
 - NFT minting example based on - https://github.com/metaplex-foundation/js-examples
 - OWASP Top 10 - https://owasp.org/www-project-top-ten/
-
-

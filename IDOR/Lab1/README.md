@@ -6,7 +6,7 @@ This lab demonstrates an **Insecure Direct Object Reference (IDOR)** vulnerabili
 
 A vulnerable API endpoint allows users to fetch NFT data by specifying the NFT ID and their user ID—without validating ownership. This creates a scenario where attackers can access NFTs they do not own.
 
----
+For a detailed demonstration of this lab, check out the [Lab Demonstration Video Playlist](https://www.youtube.com/watch?v=hmD7bBqwzmc&list=PLVW6r8PSLZe7MU2yoHFxRZVtPHn2xxmfX&index=4).
 
 ## **Example Scenario: NFT Reward System**
 
